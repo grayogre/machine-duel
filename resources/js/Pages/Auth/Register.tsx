@@ -27,7 +27,7 @@ export default function Register() {
     };
 
     return (
-        <GuestLayout>
+        <GuestLayout className="w-96">
             <Head title="Register" />
 
             <form onSubmit={submit}>
