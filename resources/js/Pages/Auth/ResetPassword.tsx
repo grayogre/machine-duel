@@ -27,12 +27,12 @@ export default function ResetPassword({ token, email }: { token: string, email: 
     };
 
     return (
-        <GuestLayout>
-            <Head title="Reset Password" />
+        <GuestLayout className="w-96">
+            <Head title="パスワードリセット" />
 
             <form onSubmit={submit}>
                 <div>
-                    <InputLabel htmlFor="email" value="Email" />
+                    <InputLabel htmlFor="email" value="メールアドレス" />
 
                     <TextInput
                         id="email"
@@ -53,7 +53,7 @@ export default function ResetPassword({ token, email }: { token: string, email: 
                     <TextInput
                         id="password"
                         type="password"
-                        name="password"
+                        name="パスワード"
                         value={data.password}
                         className="mt-1 block w-full"
                         autoComplete="new-password"
@@ -65,7 +65,7 @@ export default function ResetPassword({ token, email }: { token: string, email: 
                 </div>
 
                 <div className="mt-4">
-                    <InputLabel htmlFor="password_confirmation" value="Confirm Password" />
+                    <InputLabel htmlFor="password_confirmation" value="パスワード（確認用）" />
 
                     <TextInput
                         type="password"
@@ -81,7 +81,7 @@ export default function ResetPassword({ token, email }: { token: string, email: 
 
                 <div className="flex items-center justify-end mt-4">
                     <PrimaryButton className="ml-4" disabled={processing}>
-                        Reset Password
+                        登録
                     </PrimaryButton>
                 </div>
             </form>

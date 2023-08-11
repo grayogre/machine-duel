@@ -17,7 +17,7 @@ class CustomVerifyEmail extends VerifyEmail
         $verificationUrl = $this->verificationUrl($notifiable);
 
         return (new MailMessage)
-            ->subject(Lang::get('Verify Email Address'))
+            ->subject('【' . config('app.name') . '】' . Lang::get('Verify Email Address'))
             ->markdown('emails.verify_email', [
                 'verify_url' => $verificationUrl
             ]);
