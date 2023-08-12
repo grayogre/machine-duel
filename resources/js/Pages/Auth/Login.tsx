@@ -5,10 +5,11 @@ import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
+import { useForm } from 'laravel-precognition-react-inertia';
 
 export default function Login({ status, canResetPassword }: { status?: string, canResetPassword: boolean }) {
-    const { data, setData, post, processing, errors, reset } = useForm({
+    const form = useForm('post', route('login'), {
         email: '',
         password: '',
         remember: false,
@@ -16,14 +17,14 @@ export default function Login({ status, canResetPassword }: { status?: string, c
 
     useEffect(() => {
         return () => {
-            reset('password');
+            form.reset('password');
         };
     }, []);
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
 
-        post(route('login'));
+        form.submit();
     };
 
     return (
@@ -40,14 +41,15 @@ export default function Login({ status, canResetPassword }: { status?: string, c
                         id="email"
                         type="email"
                         name="email"
-                        value={data.email}
+                        value={form.data.email}
                         className="mt-1 block w-full"
                         autoComplete="username"
                         isFocused={true}
-                        onChange={(e) => setData('email', e.target.value)}
+                        onChange={(e) => form.setData('email', e.target.value)}
+                        onBlur={() => form.validate('email')}
                     />
 
-                    <InputError message={errors.email} className="mt-2" />
+                    {form.invalid('email') && <InputError message={form.errors.email} className="mt-2" />}
                 </div>
 
                 <div className="mt-4">
@@ -57,21 +59,22 @@ export default function Login({ status, canResetPassword }: { status?: string, c
                         id="password"
                         type="password"
                         name="password"
-                        value={data.password}
+                        value={form.data.password}
                         className="mt-1 block w-full"
                         autoComplete="current-password"
-                        onChange={(e) => setData('password', e.target.value)}
+                        onChange={(e) => form.setData('password', e.target.value)}
+                        onBlur={() => form.validate('password')}
                     />
 
-                    <InputError message={errors.password} className="mt-2" />
+                    {form.invalid('password') && <InputError message={form.errors.password} className="mt-2" />}
                 </div>
 
                 <div className="block mt-4">
                     <label className="flex items-center">
                         <Checkbox
                             name="remember"
-                            checked={data.remember}
-                            onChange={(e) => setData('remember', e.target.checked)}
+                            checked={form.data.remember}
+                            onChange={(e) => form.setData('remember', e.target.checked)}
                         />
                         <span className="ml-2 text-sm text-gray-600">ログイン状態を保持する</span>
                     </label>
@@ -87,7 +90,7 @@ export default function Login({ status, canResetPassword }: { status?: string, c
                         </Link>
                     )}
 
-                    <PrimaryButton className="ml-4" disabled={processing}>
+                    <PrimaryButton className="ml-4" disabled={form.processing}>
                         ログイン
                     </PrimaryButton>
                 </div>
