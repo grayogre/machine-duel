@@ -3,18 +3,19 @@ import InputLabel from '@/Components/InputLabel';
 import InputError from '@/Components/InputError';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
-import { Head, useForm } from '@inertiajs/react';
+import { Head } from '@inertiajs/react';
+import { useForm } from 'laravel-precognition-react-inertia';
 import { FormEventHandler } from 'react';
 
 export default function ForgotPassword({ status }: { status?: string }) {
-    const { data, setData, post, processing, errors } = useForm({
+    const form = useForm('post',route('password.email'),{
         email: '',
     });
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
 
-        post(route('password.email'));
+        form.submit();
     };
 
     return (
@@ -35,16 +36,17 @@ export default function ForgotPassword({ status }: { status?: string }) {
                         id="email"
                         type="email"
                         name="email"
-                        value={data.email}
+                        value={form.data.email}
                         className="mt-1 block w-full"
                         isFocused={true}
-                        onChange={(e) => setData('email', e.target.value)}
+                        onChange={(e) => form.setData('email', e.target.value)}
+                        onBlur={() => form.validate('email')}
                     />
 
-                    <InputError message={errors.email} className="mt-2" />
+                    {form.invalid('email') && <InputError message={form.errors.email} className="mt-2" />}
                 </div>
                 <div className="flex items-center justify-end mt-4">
-                    <PrimaryButton className="ml-4" disabled={processing}>
+                    <PrimaryButton className="ml-4" disabled={form.processing}>
                         メール送信
                     </PrimaryButton>
                 </div>

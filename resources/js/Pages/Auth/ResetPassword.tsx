@@ -4,10 +4,11 @@ import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
-import { Head, useForm } from '@inertiajs/react';
+import { Head } from '@inertiajs/react';
+import { useForm } from 'laravel-precognition-react-inertia'
 
 export default function ResetPassword({ token, email }: { token: string, email: string }) {
-    const { data, setData, post, processing, errors, reset } = useForm({
+    const form = useForm('post', route('password.store'), {
         token: token,
         email: email,
         password: '',
@@ -16,14 +17,14 @@ export default function ResetPassword({ token, email }: { token: string, email: 
 
     useEffect(() => {
         return () => {
-            reset('password', 'password_confirmation');
+            form.reset('password', 'password_confirmation');
         };
     }, []);
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
 
-        post(route('password.store'));
+        form.submit();
     };
 
     return (
@@ -38,13 +39,14 @@ export default function ResetPassword({ token, email }: { token: string, email: 
                         id="email"
                         type="email"
                         name="email"
-                        value={data.email}
+                        value={form.data.email}
                         className="mt-1 block w-full"
                         autoComplete="username"
-                        onChange={(e) => setData('email', e.target.value)}
+                        onChange={(e) => form.setData('email', e.target.value)}
+                        onBlur={() => form.validate('email')}
                     />
 
-                    <InputError message={errors.email} className="mt-2" />
+                    {form.invalid('email') && <InputError message={form.errors.email} className="mt-2" />}
                 </div>
 
                 <div className="mt-4">
@@ -54,14 +56,15 @@ export default function ResetPassword({ token, email }: { token: string, email: 
                         id="password"
                         type="password"
                         name="password"
-                        value={data.password}
+                        value={form.data.password}
                         className="mt-1 block w-full"
                         autoComplete="new-password"
                         isFocused={true}
-                        onChange={(e) => setData('password', e.target.value)}
+                        onChange={(e) => form.setData('password', e.target.value)}
+                        onBlur={() => form.validate('password')}
                     />
 
-                    <InputError message={errors.password} className="mt-2" />
+                    {form.invalid('password') && <InputError message={form.errors.password} className="mt-2" />}
                 </div>
 
                 <div className="mt-4">
@@ -70,17 +73,18 @@ export default function ResetPassword({ token, email }: { token: string, email: 
                     <TextInput
                         type="password"
                         name="password_confirmation"
-                        value={data.password_confirmation}
+                        value={form.data.password_confirmation}
                         className="mt-1 block w-full"
                         autoComplete="new-password"
-                        onChange={(e) => setData('password_confirmation', e.target.value)}
+                        onChange={(e) => form.setData('password_confirmation', e.target.value)}
+                        onBlur={() => form.validate('password')}
                     />
 
-                    <InputError message={errors.password_confirmation} className="mt-2" />
+                    {form.invalid('password_confirmation') && <InputError message={form.errors.password_confirmation} className="mt-2" />}
                 </div>
 
                 <div className="flex items-center justify-end mt-4">
-                    <PrimaryButton className="ml-4" disabled={processing}>
+                    <PrimaryButton className="ml-4" disabled={form.processing}>
                         登録
                     </PrimaryButton>
                 </div>
