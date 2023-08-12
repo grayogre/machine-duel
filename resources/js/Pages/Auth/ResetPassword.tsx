@@ -48,12 +48,12 @@ export default function ResetPassword({ token, email }: { token: string, email: 
                 </div>
 
                 <div className="mt-4">
-                    <InputLabel htmlFor="password" value="Password" />
+                    <InputLabel htmlFor="password" value="パスワード" />
 
                     <TextInput
                         id="password"
                         type="password"
-                        name="パスワード"
+                        name="password"
                         value={data.password}
                         className="mt-1 block w-full"
                         autoComplete="new-password"
