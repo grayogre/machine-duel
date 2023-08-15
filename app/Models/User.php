@@ -46,6 +46,10 @@ class User extends Authenticatable implements MustVerifyEmailContract
         'password' => 'hashed',
     ];
 
+    public function weapons() {
+        return $this->hasMany(Weapon::class);
+    }
+
     public function sendEmailVerificationNotification()
     {
         $this->notify(new CustomVerifyEmail());
