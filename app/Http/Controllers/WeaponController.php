@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Weapon;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Services\WeaponService;
@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class SummaryController extends Controller
+class WeaponController extends Controller
 {
     public function list(Request $request, WeaponService $service) : Response
     {
