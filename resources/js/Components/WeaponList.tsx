@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { toast } from 'react-toastify'
 import { WeaponSummary } from '@/types/weapon.d'
+import { Link } from '@inertiajs/react'
 
 type fieldType = keyof WeaponSummary
 
@@ -70,11 +71,6 @@ export default function WeaponList(props: { list:WeaponSummary[] }) {
     return ''
   }
 
-  const showView = (id:number) => {
-  //   const url = `/weapon/view/${id}`
-  //   router.push(url)
-  }
-
   const editOrCopy = (id:number, myWeapon:boolean):void => {
   //   if (myWeapon) {
   //     const url = `/weapon/edit/${id}`
@@ -141,9 +137,12 @@ export default function WeaponList(props: { list:WeaponSummary[] }) {
           return (
             <tr id={`row${weapon.id}`} key={weapon.id}>
               <td className="text-start px-2 border border-solid border-black">
-                <button className="m-1 px-1 border border-solid border-blue-500 rounded" onClick={(e:any) => showView(weapon.id)} >
+                <Link href={`/weapon/view/${weapon.id}`} as='button' type='button'
+                  className="m-1 px-1 border border-solid border-blue-500 rounded"
+                  preserveState preserveScroll
+                >
                   参照
-                </button>
+                </Link>
                 <button className="m-1 px-1 border border-solid border-blue-500 rounded" onClick={(e:any) => {editOrCopy(weapon.id, weapon.myWeapon)}}>
                   {weapon.myWeapon ? '編集' : 'コピー'}
                 </button>

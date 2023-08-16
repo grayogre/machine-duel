@@ -31,4 +31,10 @@ class WeaponController extends Controller
 
         return Inertia::render('Weapon/Summaries',[ 'list' => $summaries ]);
     }
+
+    public function view(string $id, WeaponService $service) : Response
+    {
+        $detail = $service->getDetail($id);
+        return Inertia::render('Weapon/View', [ 'weapon' => $detail ]);
+    }
 }

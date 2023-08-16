@@ -122,6 +122,36 @@ class WeaponService
     return $summaries;
   }
 
+  public function getDetail(string $id)
+  {
+    $weapon = Weapon::where('id', intval($id))->firstOrFail();
+
+    $result = [];
+    $result['id'] = $weapon['id'];
+    $result['weapon_name'] = $weapon['weapon_name'];
+    $result['user_id'] = $weapon['user_id'];
+    $result['register'] = $weapon->user->name;
+    $result['power_impact'] = $weapon['power_impact'];
+    $result['power_penetrate'] = $weapon['power_penetrate'];
+    $result['power_heat'] = $weapon['power_heat'];
+    $powerTotal = $weapon['power_impact'] + $weapon['power_penetrate'] + $weapon['power_heat'];
+    $result['ammo_text'] = $this->ammoText($weapon);
+    $result['hit_rate'] = $weapon['hit_rate'];
+    $result['attack_text'] = $this->attackTypeText($weapon);
+    $result['range_text'] = strval($weapon['min_range']) . ' ～ ' . strval($weapon['max_range']);
+    $baseWaight = $this->baseWaight($weapon['min_range'], $weapon['max_range'], $weapon['attack_type'], $weapon['ammo_type'], $weapon['ammo_count'], $weapon['parry_rate']);
+    $result['base_waight'] = $baseWaight;
+    $result['stabilizer_weight'] = $weapon['stabilizer_weight'];
+    $totalWaight = $baseWaight + $weapon['stabilizer_weight'];
+    $result['total_waight'] = $totalWaight;
+    $result['parry_rate'] = $weapon['parry_rate'];
+    $result['failure_rate'] = $this->failureRate($powerTotal, $weapon['min_range'],$weapon['max_range'], $totalWaight, $weapon['hit_rate'], $weapon['parry_rate']);
+    $result['mount_points'] = $this->mountPointString($weapon);
+    $result['description'] = $weapon['description'];
+
+    return $result;
+  }
+
   public function attackTypeText(Weapon $weapon)
   {
       return $this::AttackTypeTable[$weapon['attack_type']];

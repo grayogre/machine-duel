@@ -1,18 +1,17 @@
 import React, { useEffect } from 'react'
 import Checkbox from '@/Components/Checkbox'
-import InputError from '@/Components/InputError'
 import InputLabel from '@/Components/InputLabel'
 import TextInput from '@/Components/TextInput'
 import Select from '@/Components/Select'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
 import WeaponList from '@/Components/WeaponList'
-import { Head, Link, useForm } from '@inertiajs/react'
+import { Head, useForm } from '@inertiajs/react'
 import { WeaponSummary } from '@/types/weapon.d'
 import { PageProps } from '@/types'
 
 export default function WeaponSummaries({list, auth}: PageProps<{list:WeaponSummary[]}>)
 {
-  const user = auth.user;
+  const user = auth.user
   const { data, setData, get, errors, hasErrors } = useForm({
     namePart: '',
     attackType: '-1',
