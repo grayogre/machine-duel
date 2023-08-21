@@ -5,6 +5,7 @@ use App\Http\Controllers\WeaponController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,6 +37,12 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/weapon/list', [WeaponController::class, 'list'])->name('weapon.summary');
     Route::get('/weapon/view/{id}', [WeaponController::class, 'view']);
+    Route::get('/weapon/create', [WeaponController::class, 'create'])->name('weapon.create');
+    Route::get('/weapon/edit/{id}', [WeaponController::class, 'edit']);
+    Route::post('/weapon/edit', [WeaponController::class, 'store'])
+            ->middleware([HandlePrecognitiveRequests::class])
+            ->name('weapon.store');
+    Route::post('/weapon/copy/{id}', [WeaponController::class, 'copy'])->name('weapon.copy');
 });
 
 require __DIR__.'/auth.php';

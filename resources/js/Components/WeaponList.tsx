@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { toast } from 'react-toastify'
 import { WeaponSummary } from '@/types/weapon.d'
-import { Link } from '@inertiajs/react'
+import { Link, router } from '@inertiajs/react'
 
 type fieldType = keyof WeaponSummary
 
@@ -71,25 +71,23 @@ export default function WeaponList(props: { list:WeaponSummary[] }) {
     return ''
   }
 
+  const copySuccess = () => {
+    toast.success('武器データをコピーしました。')
+  }
+
+  const copyError = (errors:any) => {
+    console.log('copyError:', errors)
+    toast.error(`Error:${errors.response.status}:${errors.response.statusText}`)
+  }
+
   const editOrCopy = (id:number, myWeapon:boolean):void => {
-  //   if (myWeapon) {
-  //     const url = `/weapon/edit/${id}`
-  //     router.push(url)
-  //   } else {
-  //     const result:any = axios.post(`/api/weapon/copy/${id}`)
-  //       .then((res) => {
-  //         const newId = res.data.newId
-  //         toast.success('武器データをコピーしました。')
-  //         setCurrentId({id: newId})
-  //         process.nextTick(() => {
-  //           const row = document.getElementById(`row${newId}`)
-  //           row?.scrollIntoView({block:"nearest"});
-  //         })
-  //       }).catch((err) => {
-  //         console.log('copyErr:', err)
-  //         toast.error(`Error:${err.response.status}:${err.response.statusText}`)
-  //       })
-  //   }
+     if (myWeapon) {
+      const url = `/weapon/edit/${id}`
+      router.get(url)
+    } else {
+      const url = `/weapon/copy/${id}`
+      router.post(url,{}, {onSuccess:copySuccess, onError:copyError})
+    }
   }
 
   return (

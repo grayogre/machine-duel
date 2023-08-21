@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Weapon;
 use App\Models\User;
+use App\Http\Requests\WeaponEditRequest;
 
 const WEAPON_BASE_WEIGHT = 5;
 const ATTACK_TYPE_SHOOT = 0;
@@ -150,6 +151,65 @@ class WeaponService
     $result['description'] = $weapon['description'];
 
     return $result;
+  }
+
+  public function getWeapon($id) {
+    $weapon = Weapon::where('id', intval($id))->firstOrFail();
+    return $weapon;
+  }
+
+  public function newWeapon(int $userId) {
+    $weapon = new Weapon();
+    $weapon['id'] = null;
+    $weapon['weapon_name'] = '';
+    $weapon['user_id'] = $userId;
+    $weapon['power_impact'] = 0;
+    $weapon['power_penetrate'] = 0;
+    $weapon['power_heat'] = 0;
+    $weapon['ammo_type'] = 0;
+    $weapon['ammo_count'] = 0;
+    $weapon['hit_rate'] = 0;
+    $weapon['attack_type'] = 0;
+    $weapon['min_range'] = 1;
+    $weapon['max_range'] = 1;
+    $weapon['stabilizer_weight'] = 0;
+    $weapon['parry_rate'] = 0;
+    $weapon['can_mount_head'] = 0;
+    $weapon['can_mount_hand'] = 0;
+    $weapon['can_mount_arm'] = 0;
+    $weapon['can_mount_shoulder'] = 0;
+    $weapon['can_mount_torso'] = 0;
+    $weapon['can_mount_leg'] = 0;
+    $weapon['description'] = '';
+
+    return $weapon;
+  }
+
+  public function setWeaponAttributes(WeaponEditRequest $request)
+  {
+    $weapon = Weapon::where('id', $request->id)->firstOrFail();
+    $weapon['weapon_name'] = $request->weapon_name;
+    $weapon['user_id'] = $request->user_id;
+    $weapon['power_impact'] = $request->power_impact;
+    $weapon['power_penetrate'] = $request->power_penetrate;
+    $weapon['power_heat'] = $request->power_heat;
+    $weapon['ammo_type'] = $request->ammo_type;
+    $weapon['ammo_count'] = $request->ammo_count;
+    $weapon['hit_rate'] = $request->hit_rate;
+    $weapon['attack_type'] = $request->attack_type;
+    $weapon['min_range'] = $request->min_range;
+    $weapon['max_range'] = $request->max_range;
+    $weapon['stabilizer_weight'] = $request->stabilizer_weight;
+    $weapon['parry_rate'] = $request->parry_rate;
+    $weapon['can_mount_head'] = $request->can_mount_head;
+    $weapon['can_mount_hand'] = $request->can_mount_hand;
+    $weapon['can_mount_arm'] = $request->can_mount_arm;
+    $weapon['can_mount_shoulder'] = $request->can_mount_shoulder;
+    $weapon['can_mount_torso'] = $request->can_mount_torso;
+    $weapon['can_mount_leg'] = $request->can_mount_leg;
+    $weapon['description'] = $request->description;
+
+    return $weapon;
   }
 
   public function attackTypeText(Weapon $weapon)

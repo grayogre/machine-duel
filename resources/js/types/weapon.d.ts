@@ -34,3 +34,27 @@ export type WeaponDetail = {
   mount_points: string,
   description: string
 }
+
+type Weapon = {
+  id: number | null,
+  weapon_name: string,
+  user_id: number,
+  power_impact: number,
+  power_penetrate: number,
+  power_heat: number,
+  ammo_type: number,
+  ammo_count:number,
+  hit_rate: number,
+  attack_type: number,
+  min_range: number,
+  max_range: number,
+  stabilizer_weight: number,
+  parry_rate: number,
+  can_mount_head: number,
+  can_mount_hand: number,
+  can_mount_arm: number,
+  can_mount_shoulder: number,
+  can_mount_torso: number,
+  can_mount_leg: number,
+  description: string
+}

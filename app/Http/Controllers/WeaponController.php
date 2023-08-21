@@ -7,6 +7,9 @@ use App\Services\WeaponService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Http\Requests\WeaponEditRequest;
+use App\Models\Weapon;
+use Illuminate\Support\Facades\Auth;
 
 class WeaponController extends Controller
 {
@@ -36,5 +39,31 @@ class WeaponController extends Controller
     {
         $detail = $service->getDetail($id);
         return Inertia::render('Weapon/View', [ 'weapon' => $detail ]);
+    }
+
+    public function create(Request $request, WeaponService $service)
+    {
+        $weapon = $service->newWeapon($request->user()->id);
+        return Inertia::render('Weapon/Edit', ['weapon' => $weapon ]);
+    }
+
+    public function edit(string $id, WeaponService $service) : Response
+    {
+        $weapon = $service->getWeapon($id);
+        return Inertia::render('Weapon/Edit', ['weapon' => $weapon ]);
+    }
+
+    public function store(WeaponEditRequest $request, WeaponService $service)
+    {
+        $weapon = $service->setWeaponAttributes($request);
+        $weapon->save();
+        return to_route('weapon.summary');
+    }
+
+    public function copy(string $id) {
+        $src = Weapon::where('id',$id)->firstOrFail();
+        $dst = $src->replicate();
+        $dst['user_id'] = Auth::id();
+        $dst->save();
     }
 }
