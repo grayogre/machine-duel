@@ -187,7 +187,11 @@ class WeaponService
 
   public function setWeaponAttributes(WeaponEditRequest $request)
   {
-    $weapon = Weapon::where('id', $request->id)->firstOrFail();
+    if (is_null($request->id)) {
+        $weapon = new Weapon;
+    } else {
+        $weapon = Weapon::where('id', $request->id)->firstOrFail();
+    }
     $weapon['weapon_name'] = $request->weapon_name;
     $weapon['user_id'] = $request->user_id;
     $weapon['power_impact'] = $request->power_impact;

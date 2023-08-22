@@ -5,6 +5,7 @@ import TextInput from '@/Components/TextInput'
 import Select from '@/Components/Select'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
 import WeaponList from '@/Components/WeaponList'
+import PrimaryButtonLink from '@/Components/PrimaryButtonLink'
 import { Head, useForm } from '@inertiajs/react'
 import { WeaponSummary } from '@/types/weapon.d'
 import { PageProps } from '@/types'
@@ -51,7 +52,7 @@ export default function WeaponSummaries({list, auth}: PageProps<{list:WeaponSumm
         <title>武器リスト</title>
       </Head>
       <form>
-        <fieldset className="flex md:flex-row flex-col justify-start border border-solid border-black px-3 py-1">
+        <fieldset className="flex flex-col md:flex-row justify-start border border-solid border-black px-3 py-1">
           <legend>絞り込み条件</legend>
           <div>
             <InputLabel htmlFor="namePart" value="武器名(部分一致)" />
@@ -151,6 +152,11 @@ export default function WeaponSummaries({list, auth}: PageProps<{list:WeaponSumm
           </div>
         </fieldset>
       </form>
+      <div className="flex justify-start">
+        <PrimaryButtonLink url={route('weapon.create')} disabled={false} className="mt-2">
+          新規作成
+        </PrimaryButtonLink>
+      </div>
       <WeaponList list={list} />
     </AuthenticatedLayout>
   )

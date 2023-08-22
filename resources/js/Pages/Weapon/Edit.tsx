@@ -21,7 +21,7 @@ export default function WeaponEdit({weapon, auth}: PageProps<{weapon: Weapon}>)
   const user = auth.user
 
 
-  const form = useForm('post', '/weapon/edit', weapon)
+  const form = useForm('post', route('weapon.store'), weapon)
 
   const [baseWeight, setBaseWeight] = useState(0)
   const [failureRate, setFailureRate] = useState(1)
