@@ -43,6 +43,8 @@ Route::middleware('auth')->group(function () {
             ->middleware([HandlePrecognitiveRequests::class])
             ->name('weapon.store');
     Route::post('/weapon/copy/{id}', [WeaponController::class, 'copy'])->name('weapon.copy');
+    Route::get('/weapon/baseweight', [WeaponController::class, 'baseweight'])->name('weapon.baseweight');
+    Route::get('/weapon/failurerate', [WeaponController::class, 'failurerate'])->name('weapon.failurerate');
 });
 
 require __DIR__.'/auth.php';

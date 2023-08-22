@@ -66,4 +66,45 @@ class WeaponController extends Controller
         $dst['user_id'] = Auth::id();
         $dst->save();
     }
+
+    public function baseweight(Request $request, WeaponService $service) {
+        $min_range = intval($request->min_range);
+        $max_range = intval($request->max_range);
+        $attack_type = intval($request->attack_type);
+        $ammo_type = intval($request->ammo_type);
+        $ammo_count = intval($request->ammo_count);
+        $parry_rate = intval($request->parry_rate);
+
+        $base_waight = $service->baseWaight(
+            $min_range,
+            $max_range,
+            $attack_type,
+            $ammo_type,
+            $ammo_count,
+            $parry_rate
+        );
+
+        return ["base_weight" => $base_waight];
+    }
+
+    public function failurerate(Request $request, WeaponService $service)
+    {
+        $power_total = $request->power_total;
+        $min_range = $request->min_range;
+        $max_range = $request->max_range;
+        $total_weight = $request->total_weight;
+        $hit_rate = $request->hit_rate;
+        $parry_rate = $request->parry_rate;
+    
+        $failure_rate = $service->failureRate(
+            $power_total,
+            $min_range,
+            $max_range,
+            $total_weight,
+            $hit_rate,
+            $parry_rate
+        );
+
+        return ["failure_rate" => $failure_rate];
+    }
 }

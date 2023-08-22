@@ -83,10 +83,18 @@ export default function WeaponList(props: { list:WeaponSummary[] }) {
   const editOrCopy = (id:number, myWeapon:boolean):void => {
      if (myWeapon) {
       const url = `/weapon/edit/${id}`
-      router.get(url)
+      router.get(url,{},{
+        preserveState: true,
+        preserveScroll:true
+      })
     } else {
       const url = `/weapon/copy/${id}`
-      router.post(url,{}, {onSuccess:copySuccess, onError:copyError})
+      router.post(url,{}, {
+        preserveState: true,
+        preserveScroll:true,
+        onSuccess:copySuccess,
+        onError:copyError
+      })
     }
   }
 

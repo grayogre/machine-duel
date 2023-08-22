@@ -1,5 +1,5 @@
 import { useState, useEffect, FormEventHandler } from 'react'
-import { Head, Link } from '@inertiajs/react'
+import { Head, router } from '@inertiajs/react'
 import { Weapon } from '@/types/weapon.d'
 import { PageProps } from '@/types'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
@@ -13,6 +13,7 @@ import Checkbox from '@/Components/Checkbox'
 import PrimaryButton from '@/Components/PrimaryButton'
 import BackButton from '@/Components/BackButton'
 import { useForm } from 'laravel-precognition-react-inertia'
+import axios from 'axios'
 
 
 export default function WeaponEdit({weapon, auth}: PageProps<{weapon: Weapon}>) 
@@ -24,6 +25,44 @@ export default function WeaponEdit({weapon, auth}: PageProps<{weapon: Weapon}>)
 
   const [baseWeight, setBaseWeight] = useState(0)
   const [failureRate, setFailureRate] = useState(1)
+
+  useEffect(() => {
+    axios.get(route('weapon.baseweight'),{
+      params: {
+        min_range: form.data.min_range,
+        max_range: form.data.max_range,
+        attack_type: form.data.attack_type,
+        ammo_type: form.data.ammo_type,
+        ammo_count: form.data.ammo_count,
+        parry_rate: form.data.parry_rate,
+      }
+    })
+      .then((res) => {
+        setBaseWeight(res.data.base_weight)
+      })
+      .catch((err) => {
+        console.log('axios error:', err)
+      })
+  },[form.data])
+
+  useEffect(() => {
+    axios.get(route('weapon.failurerate'), {
+      params: {
+        power_total: (form.data.power_impact + form.data.power_penetrate + form.data.power_heat),
+        min_range: form.data.min_range,
+        max_range: form.data.max_range,
+        total_weight: (baseWeight + form.data.stabilizer_weight),
+        hit_rate: form.data.hit_rate,
+        parry_rate: form.data.parry_rate
+      }
+    })
+      .then((res) => {
+        setFailureRate(res.data.failure_rate)
+      })
+      .catch((err) => {
+        console.log('axios error:', err)
+      })
+  }, [form.data])
 
   const setMountPosition = (field: string, checked:boolean) => {
     form.setData(field, checked ? 1 : 0)
