@@ -36,9 +36,9 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/weapon/list', [WeaponController::class, 'list'])->name('weapon.summary');
-    Route::get('/weapon/view/{id}', [WeaponController::class, 'view']);
+    Route::get('/weapon/view/{id}', [WeaponController::class, 'view'])->name('weapon.view');
     Route::get('/weapon/create', [WeaponController::class, 'create'])->name('weapon.create');
-    Route::get('/weapon/edit/{id}', [WeaponController::class, 'edit']);
+    Route::get('/weapon/edit/{id}', [WeaponController::class, 'edit'])->name('weapon.edit');
     Route::post('/weapon/edit', [WeaponController::class, 'store'])
             ->middleware([HandlePrecognitiveRequests::class])
             ->name('weapon.store');

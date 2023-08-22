@@ -82,14 +82,12 @@ export default function WeaponList(props: { list:WeaponSummary[] }) {
 
   const editOrCopy = (id:number, myWeapon:boolean):void => {
      if (myWeapon) {
-      const url = `/weapon/edit/${id}`
-      router.get(url,{},{
+      router.get(route('weapon.edit', id),{},{
         preserveState: true,
         preserveScroll:true
       })
     } else {
-      const url = `/weapon/copy/${id}`
-      router.post(url,{}, {
+      router.post(route('weapon.copy', id),{}, {
         preserveState: true,
         preserveScroll:true,
         onSuccess:copySuccess,
@@ -143,7 +141,7 @@ export default function WeaponList(props: { list:WeaponSummary[] }) {
           return (
             <tr id={`row${weapon.id}`} key={weapon.id}>
               <td className="text-start px-2 border border-solid border-black">
-                <Link href={`/weapon/view/${weapon.id}`} as='button' type='button'
+                <Link href={route('weapon.view', weapon.id)} as='button' type='button'
                   className="m-1 px-1 border border-solid border-blue-500 rounded"
                   preserveState preserveScroll
                 >
