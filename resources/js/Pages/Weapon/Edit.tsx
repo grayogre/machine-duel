@@ -62,7 +62,7 @@ export default function WeaponEdit({weapon, auth}: PageProps<{weapon: Weapon}>)
       .catch((err) => {
         console.log('axios error:', err)
       })
-  }, [form.data])
+  }, [form.data, baseWeight])
 
   const setMountPosition = (field: string, checked:boolean) => {
     form.setData(field, checked ? 1 : 0)
