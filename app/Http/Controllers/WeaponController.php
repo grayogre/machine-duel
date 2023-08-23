@@ -61,12 +61,19 @@ class WeaponController extends Controller
     }
 
     public function copy(string $id) {
-        $src = Weapon::where('id',$id)->firstOrFail();
+        $src = Weapon::where('id', intval($id))->firstOrFail();
         $dst = $src->replicate();
         $dst['user_id'] = Auth::id();
         $dst->save();
+        return to_route('weapon.summary');
     }
 
+    public function delete(string $id) {
+        $target = Weapon::where('id', intval($id))->firstOrFail();
+        $target->delete();
+        return to_route('weapon.summary');
+    }
+  
     public function baseweight(Request $request, WeaponService $service) {
         $min_range = intval($request->min_range);
         $max_range = intval($request->max_range);

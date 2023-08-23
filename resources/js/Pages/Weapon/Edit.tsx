@@ -1,4 +1,4 @@
-import { useState, useEffect, FormEventHandler } from 'react'
+import { useState, useEffect, useRef, useCallback, FormEventHandler } from 'react'
 import { Head, router } from '@inertiajs/react'
 import { Weapon } from '@/types/weapon.d'
 import { PageProps } from '@/types'
@@ -12,9 +12,10 @@ import FixedField from '@/Components/FixedField'
 import Checkbox from '@/Components/Checkbox'
 import PrimaryButton from '@/Components/PrimaryButton'
 import BackButton from '@/Components/BackButton'
+import ConfirmDialog from '@/Components/ConfirmDialog'
+import { toast } from 'react-toastify'
 import { useForm } from 'laravel-precognition-react-inertia'
 import axios from 'axios'
-
 
 export default function WeaponEdit({weapon, auth}: PageProps<{weapon: Weapon}>) 
 {
@@ -25,6 +26,8 @@ export default function WeaponEdit({weapon, auth}: PageProps<{weapon: Weapon}>)
 
   const [baseWeight, setBaseWeight] = useState(0)
   const [failureRate, setFailureRate] = useState(1)
+
+  const dialogRef = useRef<HTMLDialogElement>(null)
 
   useEffect(() => {
     axios.get(route('weapon.baseweight'),{
@@ -73,6 +76,29 @@ export default function WeaponEdit({weapon, auth}: PageProps<{weapon: Weapon}>)
 
     form.submit();
   };
+
+  const deleteSuccess = () => {
+    toast.success('武器データを削除しました。')
+  }
+
+  const deleteError = (errors:any) => {
+    console.log('deleteError:', errors)
+    toast.error(`Error:${errors.response.status}:${errors.response.statusText}`)
+  }
+
+  const closeConfirm = useCallback((e:React.SyntheticEvent<HTMLDialogElement, Event>) => {
+    console.log('cc:', dialogRef.current!.returnValue)
+    if (dialogRef.current!.returnValue === 'yes') {
+      deleteWeapon(weapon.id as number)
+    }
+  }, [])
+
+  const deleteWeapon = (id:number) => {
+    router.delete(route('weapon.delete',id), {
+      onSuccess: deleteSuccess,
+      onError: deleteError
+    })
+  }
 
   return (
     <AuthenticatedLayout user={user} className="w-96" >
@@ -310,12 +336,17 @@ export default function WeaponEdit({weapon, auth}: PageProps<{weapon: Weapon}>)
             <PrimaryButton disabled={form.processing} type="submit" className="mr-1">
               登録
             </PrimaryButton>
+            {weapon.id !== null && 
+              <PrimaryButton disabled={form.process} type="button" className="mr-1" onClick={() => dialogRef.current?.showModal()}>
+                削除
+              </PrimaryButton>}
             <BackButton disabled={form.processing}>
               キャンセル
             </BackButton>
           </div>
        </div>
       </form>
+      <ConfirmDialog title="武器エディタ - Machine-duel" message="本当に削除しますか?" ref={dialogRef} onClose={closeConfirm} />
     </AuthenticatedLayout>
   )
 }
