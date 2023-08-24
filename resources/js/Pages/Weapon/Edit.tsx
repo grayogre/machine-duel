@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback, FormEventHandler } from 'react'
+import { useState, useEffect, FormEventHandler } from 'react'
 import { Head, router } from '@inertiajs/react'
 import { Weapon } from '@/types/weapon.d'
 import { PageProps } from '@/types'
@@ -12,7 +12,7 @@ import FixedField from '@/Components/FixedField'
 import Checkbox from '@/Components/Checkbox'
 import PrimaryButton from '@/Components/PrimaryButton'
 import BackButton from '@/Components/BackButton'
-import ConfirmDialog from '@/Components/ConfirmDialog'
+import ConfirmModal from '@/Components/ConfirmModal'
 import { toast } from 'react-toastify'
 import { useForm } from 'laravel-precognition-react-inertia'
 import axios from 'axios'
@@ -27,7 +27,8 @@ export default function WeaponEdit({weapon, auth}: PageProps<{weapon: Weapon}>)
   const [baseWeight, setBaseWeight] = useState(0)
   const [failureRate, setFailureRate] = useState(1)
 
-  const dialogRef = useRef<HTMLDialogElement>(null)
+  const [viewFlag, setViewFlag] = useState(false)
+  const [result, setResult] = useState(false)
 
   useEffect(() => {
     axios.get(route('weapon.baseweight'),{
@@ -86,12 +87,11 @@ export default function WeaponEdit({weapon, auth}: PageProps<{weapon: Weapon}>)
     toast.error(`Error:${errors.response.status}:${errors.response.statusText}`)
   }
 
-  const closeConfirm = useCallback((e:React.SyntheticEvent<HTMLDialogElement, Event>) => {
-    console.log('cc:', dialogRef.current!.returnValue)
-    if (dialogRef.current!.returnValue === 'yes') {
+  useEffect(() => {
+    if (result) {
       deleteWeapon(weapon.id as number)
-    }
-  }, [])
+    } 
+  }, [result])
 
   const deleteWeapon = (id:number) => {
     router.delete(route('weapon.delete',id), {
@@ -337,7 +337,7 @@ export default function WeaponEdit({weapon, auth}: PageProps<{weapon: Weapon}>)
               登録
             </PrimaryButton>
             {weapon.id !== null && 
-              <PrimaryButton disabled={form.process} type="button" className="mr-1" onClick={() => dialogRef.current?.showModal()}>
+              <PrimaryButton disabled={form.process} type="button" className="mr-1" onClick={() => setViewFlag(true)}>
                 削除
               </PrimaryButton>}
             <BackButton disabled={form.processing}>
@@ -346,7 +346,7 @@ export default function WeaponEdit({weapon, auth}: PageProps<{weapon: Weapon}>)
           </div>
        </div>
       </form>
-      <ConfirmDialog title="武器エディタ - Machine-duel" message="本当に削除しますか?" ref={dialogRef} onClose={closeConfirm} />
+      <ConfirmModal title="武器エディタ - Machine-duel" message="本当に削除しますか?" viewFlag={viewFlag} setViewFlag={setViewFlag} setResult={setResult} />
     </AuthenticatedLayout>
   )
 }
